@@ -14,15 +14,17 @@ window.onload = function () {
         var phoneRegex = [/\d\(\d\d\d\)\d\d\d-\d\d\d\d/, /\d\(\d\d\d\)\s\d\d\d-\d\d\d\d/, /\(\d\d\d\)\d\d\d-\d\d\d\d/
             , /\(\d\d\d\)\s\d\d\d-\d\d\d\d/, /\d\d\d-\d\d\d-\d\d\d\d/, /\d\d\d\d\d\d\d\d\d\d/];
         var addressRegex = /[a-z]\s[a-z]/;
-        var stateAbbr = ["AL","AK","AZ","AR","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"]
-        var zipCodeReg = [/\d\d\d\d\d/,/\d\d\d\d\d-\d\d\d\d/];
+        var stateAbbr = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
+        var zipCodeReg = [/\d\d\d\d\d/, /\d\d\d\d\d-\d\d\d\d/];
+        var passWordReg = [/[A-Z]/, /[0-9]/, /[~`!@#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/];
         validateIsNotEmpty("firstName", "firstNameError", "First name is not valid! Field must have 2 or more characters and no numbers.");
         validateIsNotEmpty("lastName", "lastNameError", "Last name is not valid! Field must have 2 or more characters and no numbers.");
         validateAddress("address", "addressError", "Invalid address!", addressRegex);
         validateCity("city", "cityError", "Invalid city! Must be longer than one character and no numbers.");
-        validateState("state", "stateError", "Invalid state! Must be a two character valid US state code and no numbers.",stateAbbr);
-        validateZipCode("zipCode", "zipCodeError", "Invalid zipcode! Ex: 00000 or 00000-0000.",zipCodeReg);
+        validateState("state", "stateError", "Invalid state! Must be a two character valid US state code and no numbers.", stateAbbr);
+        validateZipCode("zipCode", "zipCodeError", "Invalid zipcode! Ex: 00000 or 00000-0000.", zipCodeReg);
         validateRegexMatch("phone", "phoneError", "Invalid phonee numbr! Please enter in 0000000000 format.", phoneRegex);
+        validatePassWord("passWord", "passWordError", "Invalid password! Must be at least 8 characters and include one capitalized letter, one digit, and one special character.", passWordReg);
 
         return false;
     };
@@ -92,56 +94,85 @@ window.onload = function () {
             inputElement.classList.add("errorInput");
         }
     }
-    function validateCity(inputId, errorId, errorText){
+    function validateCity(inputId, errorId, errorText) {
         var value = myform[inputId].value;
         var inputElement = document.getElementById(inputId);
         var errorElement = document.getElementById(errorId);
-        if(value.length<2||/[0-9]/.test(value)){
+        if (value.length < 2 || /[0-9]/.test(value)) {
             errorElement.textContent = errorText;
             inputElement.classList.add("errorInput");
-        }else{
+        } else {
             errorElement.textContent = "";
             inputElement.classList.remove("errorInput");
         }
     }
-    function validateState(inputId, errorId, errorText, inputRegex){
+    function validateState(inputId, errorId, errorText, inputRegex) {
         var value = myform[inputId].value.toUpperCase();
         var inputElement = document.getElementById(inputId);
         var errorElement = document.getElementById(errorId);
-        for(var i = 0;i<inputRegex.length;i++){
-            if(!/[0-9]/.test(value)){
+        for (var i = 0; i < inputRegex.length; i++) {
+            if (!/[0-9]/.test(value)) {
 
-                if(value.match(inputRegex[i])){
+                if (value.match(inputRegex[i])) {
                     console.log("good match")
                     errorElement.textContent = "";
                     inputElement.classList.remove("errorInput");
                     break;
-                }else{
+                } else {
                     console.log("bad match")
                     errorElement.textContent = errorText;
                     inputElement.classList.add("errorInput");
                 }
-            }else{
+            } else {
                 errorElement.textContent = errorText;
-                    inputElement.classList.add("errorInput");
+                inputElement.classList.add("errorInput");
             }
         }
     }
-    function validateZipCode(inputId, errorId, errorText, inputRegex){
+    function validateZipCode(inputId, errorId, errorText, inputRegex) {
         var value = myform[inputId].value;
         var inputElement = document.getElementById(inputId);
         var errorElement = document.getElementById(errorId);
-       
-            if((inputRegex[0].test(value)&&value.length == 5)||inputRegex[1].test(value)&&value.length==10){
+
+        if ((inputRegex[0].test(value) && value.length == 5) || inputRegex[1].test(value) && value.length == 10) {
+            errorElement.textContent = "";
+            inputElement.classList.remove("errorInput");
+            console.log("good zip");
+
+        } else {
+            errorElement.textContent = errorText;
+            inputElement.classList.add("errorInput");
+            console.log("bad zip");
+        }
+
+    }
+    function validatePassWord(inputId, errorId, errorText, inputRegex) {
+        var value = myform[inputId].value;
+        var inputElement = document.getElementById(inputId);
+        var errorElement = document.getElementById(errorId);
+        var count = 0;
+        if(value.length>7){
+            for (var i = 0; i < inputRegex.length; i++) {
+                if (inputRegex[i].test(value)) {
+                    console.log("good pass on sub: " + i);
+                    count++;
+                } else {
+                    console.log("bad check on sub: " + i);
+    
+                }
+            }
+            if (count >= 3) {
                 errorElement.textContent = "";
                 inputElement.classList.remove("errorInput");
-                console.log("good zip");
-
-            }else{
+    
+            } else {
                 errorElement.textContent = errorText;
                 inputElement.classList.add("errorInput");
-                console.log("bad zip");
             }
-        
+
+        }else{
+            errorElement.textContent = errorText;
+            inputElement.classList.add("errorInput");
+        }
     }
 }
