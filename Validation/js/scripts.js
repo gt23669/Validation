@@ -13,7 +13,7 @@ window.onload = function () {
 
         var phoneRegex = [/\d\(\d\d\d\)\d\d\d-\d\d\d\d/, /\d\(\d\d\d\)\s\d\d\d-\d\d\d\d/, /\(\d\d\d\)\d\d\d-\d\d\d\d/
             , /\(\d\d\d\)\s\d\d\d-\d\d\d\d/, /\d\d\d-\d\d\d-\d\d\d\d/, /\d\d\d\d\d\d\d\d\d\d/];
-        var addressRegex = /[a-z]\s[a-z]/;
+        var addressRegex = /\w\s\w/;
         var stateAbbr = ["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"]
         var zipCodeReg = [/\d\d\d\d\d/, /\d\d\d\d\d-\d\d\d\d/];
         var passWordReg = [/[A-Z]/, /[0-9]/, /[~`!@#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/];
@@ -110,23 +110,28 @@ window.onload = function () {
         var value = myform[inputId].value.toUpperCase();
         var inputElement = document.getElementById(inputId);
         var errorElement = document.getElementById(errorId);
-        for (var i = 0; i < inputRegex.length; i++) {
-            if (!/[0-9]/.test(value)) {
-
-                if (value.match(inputRegex[i])) {
-                    console.log("good match")
-                    errorElement.textContent = "";
-                    inputElement.classList.remove("errorInput");
-                    break;
+        if(value.length<3){
+            for (var i = 0; i < inputRegex.length; i++) {
+                if (!/[0-9]/.test(value)) {
+    
+                    if (value.match(inputRegex[i])) {
+                        console.log("good match")
+                        errorElement.textContent = "";
+                        inputElement.classList.remove("errorInput");
+                        break;
+                    } else {
+                        console.log("bad match")
+                        errorElement.textContent = errorText;
+                        inputElement.classList.add("errorInput");
+                    }
                 } else {
-                    console.log("bad match")
                     errorElement.textContent = errorText;
                     inputElement.classList.add("errorInput");
                 }
-            } else {
-                errorElement.textContent = errorText;
-                inputElement.classList.add("errorInput");
             }
+        }else{
+            errorElement.textContent = errorText;
+            inputElement.classList.add("errorInput");
         }
     }
     function validateZipCode(inputId, errorId, errorText, inputRegex) {
