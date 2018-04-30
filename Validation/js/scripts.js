@@ -25,7 +25,7 @@ window.onload = function () {
         validateZipCode("zipCode", "zipCodeError", "Invalid zipcode! Ex: 00000 or 00000-0000.", zipCodeReg);
         validateRegexMatch("phone", "phoneError", "Invalid phonee numbr! Please enter in 0000000000 format.", phoneRegex);
         validatePassWord("passWord", "passWordError", "Invalid password! Must be at least 8 characters and include one capitalized letter, one digit, and one special character.", passWordReg);
-
+        validateVerifyPassWord("verifyPassWord", "verifyPassWordError", "Does not match password.");
         return false;
     };
     //returns true if value matches regex
@@ -178,6 +178,19 @@ window.onload = function () {
         }else{
             errorElement.textContent = errorText;
             inputElement.classList.add("errorInput");
+        }
+    }
+    function validateVerifyPassWord(inputId, errorId, errorText){
+        var value = myform[inputId].value;
+        var password = myform["passWord"].value
+        var inputElement = document.getElementById(inputId);
+        var errorElement = document.getElementById(errorId);
+        if(value.match(password)){
+            errorElement.textContent = "";
+                inputElement.classList.remove("errorInput");
+        }else{
+            errorElement.textContent = errorText;
+                inputElement.classList.add("errorInput");
         }
     }
 }
